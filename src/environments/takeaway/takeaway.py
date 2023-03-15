@@ -1,9 +1,11 @@
 from typing import List
 import socket
+from argumentation import utils as argm
+from environments.takeaway.utils import global_values
 
 class Takeaway():
     """Interface that communicates with rcssserver via sockets.
-    It stores the ordering that needs to be evaluated, sends a start signal 
+    It stores the ranking that needs to be evaluated, sends a start signal 
     to rcssserver and returns the episode duration (total reward).
     """
     
@@ -14,7 +16,7 @@ class Takeaway():
         send_port: int,
         recv_host: str,
         recv_port: int,
-        ordering_path: str
+        ranking_path: str
     ):
         """Initialise Takeaway
 
@@ -24,7 +26,7 @@ class Takeaway():
             send_port (int): port of the WSL instance
             recv_host (str): IP of the windows host
             recv_port (int): port of the windows host
-            ordering_path (str): path where the ordering will be written (and read by the RoboCup takers).
+            ranking_path (str): path where the ranking will be written (and read by the RoboCup takers).
         """
     
         self._args = args
@@ -35,23 +37,21 @@ class Takeaway():
         self._send_port = send_port
         self._recv_host = recv_host
         self._recv_port = recv_port
-        self._ordering_path = ordering_path
+        self._ranking_path = ranking_path
 
-    def _save_ordering(self, ordering: List[str]) -> None:
-        assert len(ordering)==self._size,  "Error: Ordering is not the right size."
-        f = open(self._ordering_path, "w")
-        for i, elem in enumerate(ordering):
-            arg_idx = self._args.index(elem)
-            f.write("{} {}\n".format(arg_idx, self._size-i))
-        f.close()
-
-    def play(self, ordering: List[str]) -> float:
+    def play(self, ranking: argm.Ranking, global_strategy: bool = False) -> float:
         """Send a message to RoboCup to start playing and listen until it receives the final reward.
 
         Returns:
             float: the reward output by the game
         """
-        self._save_ordering(ordering)
+
+        if global_strategy:
+            _, arg_val = global_values(ranking)
+            argm.save_values(self._ranking_path, self._args, arg_val)
+        else:
+            argm.save_ranking(self._ranking_path, self._args, ranking)
+
         self._start_game()
         reward = self._wait_termination()
         return reward        

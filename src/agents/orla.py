@@ -47,21 +47,21 @@ class ORLA(Agent):
         probs = self.net(state_flat)
         return probs
 
-    def derive_ordering(self, greedy=False) -> Tuple[List[str], torch.Tensor]:
-        ordering = []
+    def derive_ranking(self, greedy=False) -> Tuple[List[str], torch.Tensor]:
+        ranking = []
         probs = []
 
         for _ in range(self.n):
-            state_t = argm.order_to_matrix(ordering, self.args, True)
-            remaining = self.reimaining_arguments(ordering)
+            state_t = argm.ranking_to_matrix(ranking, self.args, True)
+            remaining = self.reimaining_arguments(ranking)
             mask = self.mask_remaining(remaining)
             probs_t = self.get_action_probs(state_t, mask)
             m = Categorical(probs_t)
             idx = torch.argmax(probs_t) if greedy else m.sample()
-            ordering.append(self.args[idx])
+            ranking.append(self.args[idx])
             probs.append(probs_t[idx])
         probs = torch.stack(probs)
-        return ordering, probs
+        return ranking, probs
 
     def learn(self, probs: torch.Tensor, discounted_returns: torch.Tensor):
         loss = torch.log(probs) * discounted_returns
@@ -80,14 +80,14 @@ class ORLABaseline(ORLA):
     def state_value(self, state: np.ndarray):
         return np.sum(self.w[state])
 
-    def learn(self, orderings: List[List[str]],  probs: List[torch.Tensor], final_returns: List[float]):
+    def learn(self, rankings: List[List[str]],  probs: List[torch.Tensor], final_returns: List[float]):
         deltas = []
         step_w = np.zeros_like(self.w)
 
         for i in range(len(final_returns)): # for each episode in the batch
             delta = []
             for t in range(self.n): # for each step in the episode
-                state_t = argm.order_to_matrix(orderings[i][:t], self.args, True)
+                state_t = argm.ranking_to_matrix(rankings[i][:t], self.args, True)
                 delta_t = final_returns[i] - self.state_value(state_t)
                 step_w[state_t] += self.alpha_w * delta_t
                 delta.append(delta_t)

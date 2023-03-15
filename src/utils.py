@@ -1,5 +1,6 @@
 import numpy as np
-from typing import List, Tuple
+from typing import List, Tuple, Iterable
+from enum import IntEnum
 
 def max_rand_tie(values: List) -> Tuple[int, float, List]:
     """Returns the maximum element of a list breaking ties at random.
@@ -22,3 +23,17 @@ def count_parameters(model):
 def estimate_alpha_w(n_args, n_iterations = 1e4):
     alpha_w = 0.1 / (n_iterations * np.mean(range(n_args)))
     return alpha_w
+
+def flatten(items):
+    """Yield items from any nested iterable; https://stackoverflow.com/a/40857703"""
+    for x in items:
+        if isinstance(x, Iterable) and not isinstance(x, (str, bytes)):
+            for sub_x in flatten(x):
+                yield sub_x
+        else:
+            yield x
+
+class Mode (IntEnum):
+    STRICT   = 0
+    NON_STRICT = 1
+

@@ -1,5 +1,101 @@
 from enum import IntEnum
 import subprocess
+from collections import defaultdict
+import numpy as np
+
+from argumentation import utils as argm
+
+def global_values(ranking: argm.Ranking):
+    args = list(all_arguments.values())
+    values = defaultdict(lambda: [])
+
+    for arg in ranking:
+        keywords = ["TackleBall", "MinAngle", "MinDist", "FarKeeper", "OpenKeeper"]
+        for keyword in keywords:
+            if str(arg).startswith(keyword):
+                val = len(all_arguments) - ranking.index(arg)
+                values[keyword].append(val)
+
+    global_values = dict()
+    for val in values:
+        data = np.array(values[val])
+        mean = data.mean()
+        global_values[val] = int(mean)
+
+    global_values = dict(sorted(global_values.items(), key=lambda x:x[1], reverse=True))
+
+    global_arg_vals = []
+    for arg in args:
+        for glob in global_values:
+            if str(arg).startswith(glob):
+                global_arg_vals.append((arg, global_values[glob]))
+    
+    global_arg_vals = dict(global_arg_vals)
+    global_arg_vals = dict(sorted(global_arg_vals.items(), key=lambda x:x[1], reverse=True))
+
+    return global_values, global_arg_vals
+
+def global_ranking(global_arg_vals):
+    unique_values = list(set(global_arg_vals.values()))
+    unique_values.sort(reverse=True)
+
+    global_ranking = []
+    for val in unique_values:
+        level = []
+        for arg in global_arg_vals:
+            if global_arg_vals[arg] == val:
+                level.append(arg)
+        global_ranking.append(level)
+        
+    return global_ranking
+
+
+t1_arguments = {
+    0 : 'TackleBall1',
+    1 : 'OpenKeeper1,2',
+    2 : 'FarKeeper1,2',
+    3 : 'MinAngle1,2',
+    4 : 'MinDist1,2',
+    5 : 'OpenKeeper1,3',
+    6 : 'FarKeeper1,3',
+    7 : 'MinAngle1,3',
+    8 : 'MinDist1,3',
+    9 : 'OpenKeeper1,4',
+    10 : 'FarKeeper1,4',
+    11 : 'MinAngle1,4',
+    12 : 'MinDist1,4'}
+
+t2_arguments = {
+    13 : 'TackleBall2',
+    14 : 'OpenKeeper2,2',
+    15 : 'FarKeeper2,2',
+    16 : 'MinAngle2,2',
+    17 : 'MinDist2,2',
+    18 : 'OpenKeeper2,3',
+    19 : 'FarKeeper2,3',
+    20 : 'MinAngle2,3',
+    21 : 'MinDist2,3',
+    22 : 'OpenKeeper2,4',
+    23 : 'FarKeeper2,4',
+    24 : 'MinAngle2,4',
+    25 : 'MinDist2,4'}
+
+t3_arguments = {
+    26 : 'TackleBall3',
+    27 : 'OpenKeeper3,2',
+    28 : 'FarKeeper3,2',
+    29 : 'MinAngle3,2',
+    30 : 'MinDist3,2',
+    31 : 'OpenKeeper3,3',
+    32 : 'FarKeeper3,3',
+    33 : 'MinAngle3,3',
+    34 : 'MinDist3,3',
+    35 : 'OpenKeeper3,4',
+    36 : 'FarKeeper3,4',
+    37 : 'MinAngle3,4',
+    38 : 'MinDist3,4'}
+
+all_arguments = t1_arguments | t2_arguments | t3_arguments
 
 # Takeaway Actions.
 class Actions(IntEnum):
