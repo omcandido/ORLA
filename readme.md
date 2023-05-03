@@ -11,7 +11,7 @@ The final results are shown in the [analysis notebook](results/analysis.ipynb).
 Takeaway is implemented using the RoboCup Soccer Simulator (rcssserver) and using the keepaway library as an interface between the simulator and the learning agent. To connect ORLA with RoboCup, it is necessary to install [rcssserver_orla](https://github.com/omcandido/rcssserver_orla) and [keepaway_orla](https://github.com/omcandido/keepaway_orla). These two repositories contain all the adjustments needed for ORLA to interact with RoboCup and play Takeaway.
 
 ## Implementing other RL tasks
-ORLA is readily compatible with new RL tasks. Here is [a demo] (https://github.com/omcandido/RL-AA/blob/b8af1959c78c70eea610757ddd575c8308383eba/src/demo.ipynb) of ORLA used to learn to play Foggy Frozen Lake (FFL). Note that this demo is from a previous project.
+ORLA is readily compatible with new RL tasks. Here is [a demo](https://github.com/omcandido/RL-AA/blob/b8af1959c78c70eea610757ddd575c8308383eba/src/demo.ipynb) of ORLA used to learn to play Foggy Frozen Lake (FFL). Note that this demo is from a previous project.
 The steps to adapt ORLA to learn new taks are:
 - Create a new environment where you implement the MDP that ORLA has to optimise: this is a gym environment that acts as an interface between ORLA and the ultimate RL task you want to solve.
 - Create a argument-action dictionary: the keys are the argument IDs and the values are the action each argument promotes.
