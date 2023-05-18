@@ -4,6 +4,8 @@ import numpy as np
 import networkx as nx
 from typing import Tuple, List
 
+from utils import flatten
+
 # Attacks are just tupples (attacker, attacked).
 # An Attack type is created for convenience.
 Attack = Tuple[str,str]
@@ -132,10 +134,19 @@ class ValuebasedArgumentationFramework(ArgumentationFramework):
             self.update_vaf()
 
     def update_vaf(self):
-        """Remove the attacks of all arguments with lower preference.
+        """Remove the attacks from all arguments with lower preference.
         """
-        for i_order, arg in enumerate(self.order):
-            i_arg = self.args.index(arg[0])
+        for i_order, level in enumerate(self.order):
             higher = self.order[0:i_order+1]
+            higher = list(flatten(higher))
             mask = np.isin(self.args, higher, invert=True)
-            self.mat[:, i_arg][mask] = 0
+            for arg in level:
+                i_arg = self.args.index(arg)
+                # print(self.args)
+                # print(self.order)
+                # print(i_order)
+                # print(arg)
+                # print(higher)
+                # print(mask)
+                # print()
+                self.mat[:, i_arg][mask] = 0

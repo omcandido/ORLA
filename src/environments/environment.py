@@ -110,6 +110,6 @@ class Environment(ABC):
             int: index of the promoted action.
         """
         if len(ext) == 0:
-            print("No extension: performing random action...")
+            # print("No extension: performing random action...")
             return random.sample(sorted(self._arg_actions.values()), 1)[0]
         return self._arg_actions[ext[0]]
