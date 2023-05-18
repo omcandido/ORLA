@@ -39,7 +39,7 @@ class Environment(ABC):
     def reset_memory(self):
         self.mem = NotImplemented
 
-    def play(self, ranking: argm.Ranking, render=False) -> float:
+    def play(self, ranking: argm.Ranking) -> float:
         """Uses the ranking to play the RL game and returns the total reward.
 
         Args:
@@ -55,22 +55,12 @@ class Environment(ABC):
         terminated = False
         truncated = False
         while not (terminated or truncated):
-            if render:
-                self.render_frame()
             action = self.select_action(vaf, observation)
             self.update_memory(observation, action)
             observation, reward, terminated, truncated, _ = self._env.step(action)
 
             total_reward += reward
-        
-        if render:
-            self.render_frame()
         return total_reward
-
-    def render_frame(self):
-        # self._env.render()
-        # time.sleep(0.25)
-        pass
 
     def select_action(self, vaf, obs) ->int:
         """Select an action according to the VAF it has been initialised with.

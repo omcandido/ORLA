@@ -11,8 +11,9 @@ from environments.foggy_frozen_lake.utils import Direction
 from environments.foggy_frozen_lake.world import FrozenLakeWrapper, FrozenLakeRewardWrapper, FrozenLakeNeighboursObservationWrapper
 
 class FFL(Environment):
-    def __init__(self, arg_actions, n=8, p=0.8):
-        env = gym.make("FrozenLake-v1",  is_slippery=False, desc=generate_random_map(n, p))
+    def __init__(self, arg_actions, n=8, p=0.8, render=False):
+        render_mode = "human" if render else None
+        env = gym.make("FrozenLake-v1",  is_slippery=False, desc=generate_random_map(n, p), render_mode = render_mode)
         env = FrozenLakeWrapper(env, multiple_visits=True)
         env = FrozenLakeNeighboursObservationWrapper(env)
         env = FrozenLakeRewardWrapper(env)
