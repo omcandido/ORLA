@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from typing import List, Union
+from typing import List, MutableSet, Tuple, Dict
 
 Argument = str
 Arguments = List[Argument]
@@ -65,7 +65,7 @@ def ranking_to_values(ranking):
             arg_val[arg] = val
     return arg_val
 
-def text_to_values(path:str, arg_id: dict):
+def text_to_values(path:str, arg_id: Dict):
     arg_val = dict()
     df = pd.read_csv(path, header=None, sep=' ', names=(('argID', 'val')))
     for idx, row in df.iterrows():
@@ -89,9 +89,25 @@ def save_ranking(path: str , args: Arguments, ranking: Ranking):
             f.write("{} {}\n".format(arg_idx, len(ranking)-i))
     f.close()
 
-def save_values(path: str, args, arg_val: dict):
+def save_values(path: str, args, arg_val: Dict):
     f = open(path, "w")
     for arg in arg_val:
         arg_idx = args.index(arg)
         f.write("{} {}\n".format(arg_idx, arg_val[arg]))
     f.close()
+
+
+def construct_all_attacks(arg_actions: Dict) -> MutableSet[Tuple[str, str]]:
+    """Given a dictionary of arguments and their promoted action, returns a set with all attacks among them.
+    Args:
+        arg_actions (dict): dictionary in the format {argument: action}
+    Returns:
+        MutableSet[Tuple[str, str]]: set of attacks among
+    """
+    attacks = set()
+    for arg1 in arg_actions:
+        for arg2 in arg_actions:
+            if arg_actions[arg1] != arg_actions[arg2]:
+                attacks.add((arg1, arg2))
+                attacks.add((arg2, arg1))      
+    return attacks
