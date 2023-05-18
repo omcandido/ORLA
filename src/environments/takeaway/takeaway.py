@@ -2,8 +2,9 @@ from typing import List
 import socket
 from argumentation import utils as argm
 from environments.takeaway.utils import get_global_values
+from environments.environment import Environment
 
-class Takeaway():
+class Takeaway(Environment):
     """Interface that communicates with rcssserver via sockets.
     It stores the ranking that needs to be evaluated, sends a start signal 
     to rcssserver and returns the episode duration (total reward).
@@ -11,7 +12,7 @@ class Takeaway():
     
     def __init__(
         self,
-        args: List[str],
+        args: argm.Arguments,
         send_host: str,
         send_port: int,
         recv_host: str,
@@ -29,7 +30,7 @@ class Takeaway():
             ranking_path (str): path where the ranking will be written (and read by the RoboCup takers).
         """
     
-        self._args = args
+        super().__init__(args, None)
         self._size = len(args)
         self._order = []
         self._order_idx = []
@@ -39,13 +40,25 @@ class Takeaway():
         self._recv_port = recv_port
         self._ranking_path = ranking_path
 
+    def get_premises(self, obs):
+        pass
+
+    def get_arguments(self, premises):
+        pass
+
+    def update_memory(self, obs, act):
+        pass
+    
+    def reset_memory(self, obs, act):
+        pass
+
     def play(self, ranking: argm.Ranking) -> float:
         """Send a message to RoboCup to start playing and listen until it receives the final reward.
 
         Returns:
             float: the reward output by the game
         """
-        argm.save_ranking(self._ranking_path, self._args, ranking)
+        argm.save_ranking(self._ranking_path, self._arguments, ranking)
         self._start_game()
         reward = self._wait_termination()
         return reward        
