@@ -1,6 +1,21 @@
 # ORLA: Online Reinforcement Learning Argumentation
 ORLA is a symbolic RL approach that uses arguments provided by an expert as rules and learns which rules prevail over others via RL. Ultimately, ORLA learns a ranking over the arguments, which can be transformed into a standard value-based argumentation framework (VAF).
 
+## Cite
+[ORLA: Learning Explainable Argumentation Models](https://doi.org/10.24963/kr.2023/53)
+```
+@inproceedings{KR2023-53,
+    title     = {{ORLA: Learning Explainable Argumentation Models}},
+    author    = {Otero, Cándido and Craandijk, Dennis and Bex, Floris},
+    booktitle = {{Proceedings of the 20th International Conference on Principles of Knowledge Representation and Reasoning}},
+    pages     = {542--551},
+    year      = {2023},
+    month     = {8},
+    doi       = {10.24963/kr.2023/53},
+    url       = {https://doi.org/10.24963/kr.2023/53},
+  }
+```
+
 ## Getting started
 To adapt ORLA to your reinforcement learning (RL) task, you will need to do two things:
 1. Create an expert argumentation framework (AF) for your task.
@@ -18,7 +33,7 @@ We provide two implementation examples:
 - **Takeaway**: a soccer-like game where takers must gain possession of the ball and keepers must prevent it. The [takeaway](src/takeaway.ipynb) notebook explains the game, the AF and how ORLA is trained. Note that this example does not follow the canonical way to create an `Environment`, since all the inference is done inside the soccer simulator (via [keepaway_orla](https://github.com/omcandido/keepaway_orla)).
 
 ## Results
-The final results for Takeaway (shown in ORLA's paper) can be found in the [analysis notebook](results/analysis.ipynb).
+The final results for Takeaway (shown in the [paper](https://doi.org/10.24963/kr.2023/53)) can be found in the [analysis notebook](results/analysis.ipynb).
 
 ## Playing Takeaway with ORLA
 Takeaway is implemented using the RoboCup Soccer Simulator (rcssserver) as the world and the keepaway library as an interface between the simulator and the learning agent. To connect ORLA with RoboCup, it is necessary to install [rcssserver_orla](https://github.com/omcandido/rcssserver_orla) and [keepaway_orla](https://github.com/omcandido/keepaway_orla). These two repositories contain all the adjustments needed for ORLA to interact with RoboCup and play Takeaway.
