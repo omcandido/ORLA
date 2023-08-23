@@ -1,7 +1,7 @@
 # ORLA: Online Reinforcement Learning Argumentation
 ORLA is a symbolic RL approach that uses arguments provided by an expert as rules and learns which rules prevail over others via RL. Ultimately, ORLA learns a ranking over the arguments, which can be transformed into a standard value-based argumentation framework (VAF).
 
-## Cite
+## Original paper and citation
 [ORLA: Learning Explainable Argumentation Models](https://doi.org/10.24963/kr.2023/53)
 ```
 @inproceedings{KR2023-53,
